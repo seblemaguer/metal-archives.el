@@ -64,8 +64,6 @@ ma2oa-entry-database."
          (entry (make-ma2oa-entry :artist artist :album album :date date)))
     (puthash entry t ma2oa-entry-database)))
 
-
-
 (defun ma2oa~update-db (data)
   "Update the entry database from the DATA give in parameter."
   (let* ((entries (assoc-default 'aaData data))
@@ -84,7 +82,6 @@ file."
                             (ma2oa-entry-date entry))))
     (insert org-entry)))
 
-
 (defun ma2oa~db-to-agenda ()
   "Generate the org-agenda buffer and update the global agenda using the entry database."
   (let* ((coding-system-for-write 'utf-8))
@@ -98,7 +95,6 @@ file."
 
       ;; Save the buffer
       (save-buffer))))
-
 
 (defun ma2oa-retrieve-next-releases ()
   (interactive)
