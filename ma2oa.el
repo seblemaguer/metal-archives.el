@@ -3,7 +3,7 @@
 ;; Copyright (C)  8 January 2019
 ;;
 
-;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
+;; Author: SÃ©bastien Le Maguer <lemagues@tcd.ie>
 
 ;; Package-Requires: ((emacs "25.2"))
 ;; Keywords:
