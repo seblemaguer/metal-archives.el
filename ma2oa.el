@@ -35,8 +35,8 @@
 (defvar ma2oa-max-vue 10
   "The maximum number of retrieved entries")
 
-(defvar ma2oa-org-template "* %s - %s\n:PROPERTIES:\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
-  "Org entry template. The formatting assume the triplet ARTIST, ALBUM and DATE everything string formatted.")
+(defvar ma2oa-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
+  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted.")
 
 (defvar ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
   "Regexp to parse the date coming from metal-archives.com")
@@ -50,7 +50,7 @@
 (defvar ma2oa-target-file "~/.emacs.d/ma-releases.org"
   "The release org formatted file")
 
-(cl-defstruct ma2oa-entry artist album date)
+(cl-defstruct ma2oa-entry artist album type genre date)
 
 (defun ma2oa~add-entry-to-db (vector-entry)
   "Parse an VECTOR_ENTRY coming from the metal-archives.com
@@ -58,10 +58,12 @@ website. A ma2oa-entry is then created and added to
 ma2oa-entry-database."
   (let* ((artist (decode-coding-string (replace-regexp-in-string "<a[^>]*>\\([^<]*\\)<.*" "\\1" (aref vector-entry 0)) 'utf-8)) ;; NOTE: MA gives a string encoded in Latin-1
          (album (decode-coding-string (replace-regexp-in-string "<a[^>]*>\\([^<]*\\)<.*" "\\1" (aref vector-entry 1)) 'utf-8))
+         (type (decode-coding-string (replace-regexp-in-string "[ -]" "_" (aref vector-entry 2)) 'utf-8))
+         (genre (decode-coding-string (aref vector-entry 3) 'utf-8))
          (date (org-read-date nil nil (replace-regexp-in-string ma2oa-input-date-regexp
                                                                 ma2oa-output-date-format
                                                                 (aref vector-entry 4))))
-         (entry (make-ma2oa-entry :artist artist :album album :date date)))
+         (entry (make-ma2oa-entry :artist artist :album album :type type :genre genre :date date)))
     (puthash entry t ma2oa-entry-database)))
 
 (defun ma2oa~update-db (data)
@@ -79,6 +81,8 @@ file."
   (let* ((org-entry (format ma2oa-org-template
                             (ma2oa-entry-artist entry)
                             (ma2oa-entry-album entry)
+                            (ma2oa-entry-type entry)
+                            (ma2oa-entry-genre entry)
                             (ma2oa-entry-date entry))))
     (insert org-entry)))
 
