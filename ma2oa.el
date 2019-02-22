@@ -98,7 +98,11 @@ file."
       (mapc 'ma2oa~format-entry (hash-table-keys ma2oa-entry-database))
 
       ;; Save the buffer
-      (save-buffer))))
+      (save-buffer)
+
+      ;; Close the buffer
+      (kill-this-buffer)
+      )))
 
 (defun ma2oa-retrieve-next-releases ()
   (interactive)
