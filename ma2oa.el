@@ -119,9 +119,7 @@ file."
 
    :error
    (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
-                  (message "Got error: %S" error-thrown)))
-
-   :complete (lambda (&rest _) (message "Finished!"))))
+                  (message "Got error: %S" error-thrown)))))
 
 (provide 'ma2oa)
 
