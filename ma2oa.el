@@ -38,7 +38,7 @@
 (defvar ma2oa-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
   "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted.")
 
-(defvar ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
+(defvar ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
   "Regexp to parse the date coming from metal-archives.com")
 
 (defvar ma2oa-output-date-format "\\1 \\2, \\3"
