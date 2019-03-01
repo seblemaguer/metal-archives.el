@@ -44,8 +44,8 @@
 (defvar ma2oa-output-date-format "\\1 \\2, \\3"
   "Substitution regexp generated based on the groups captured by the input regexp.")
 
-(defvar ma2oa-entry-database (make-hash-table)
-  "The release entry database.")
+(defvar ma2oa-entry-database '()
+  "The release entry database set.")
 
 (defvar ma2oa-target-file "~/.emacs.d/ma-releases.org"
   "The release org formatted file")
@@ -64,20 +64,19 @@ ma2oa-entry-database."
                                                                 ma2oa-output-date-format
                                                                 (aref vector-entry 4))))
          (entry (make-ma2oa-entry :artist artist :album album :type type :genre genre :date date)))
-    (puthash entry t ma2oa-entry-database)))
+
+    (unless (member entry ma2oa-entry-database)
+      (push entry ma2oa-entry-database))))
 
 (defun ma2oa~update-db (data)
   "Update the entry database from the DATA give in parameter."
   (let* ((entries (assoc-default 'aaData data))
          (formatted-entries))
-    ;; (message "nb_items = %d" (assoc-default 'iTotalRecords data))
-    ;; (message "nb_displayed_items = %d" (assoc-default 'iTotalDisplayRecords data))
     (mapc 'ma2oa~add-entry-to-db entries)))
 
 
 (defun ma2oa~format-entry (entry)
-  "Format an ENTRY in org format to be added to the org agenda
-file."
+  "Format an ENTRY in org format to be added to the org agenda file."
   (let* ((org-entry (format ma2oa-org-template
                             (ma2oa-entry-artist entry)
                             (ma2oa-entry-album entry)
@@ -95,25 +94,23 @@ file."
       (erase-buffer)
 
       ;; Synchronize db and the file
-      (mapc 'ma2oa~format-entry (hash-table-keys ma2oa-entry-database))
+      (mapc 'ma2oa~format-entry ma2oa-entry-database)
 
       ;; Save the buffer
       (save-buffer)
 
       ;; Close the buffer
-      (kill-this-buffer)
-      )))
+      (kill-this-buffer))))
 
 (defun ma2oa-retrieve-next-releases ()
   (interactive)
-  (request
-   "https://www.metal-archives.com/release/ajax-upcoming/json/1"
+  (request "https://www.metal-archives.com/release/ajax-upcoming/json/1"
    :params '(("sEcho" . 1)) ;; FIXME: actually not used ! ("iDisplayLength" . ma2oa-max-vue))
    :parser 'json-read
 
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (clrhash ma2oa-entry-database)
+               (setq ma2oa-entry-database '())
                (ma2oa~update-db data)
                (ma2oa~db-to-agenda)))
 
