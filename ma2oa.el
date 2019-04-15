@@ -68,13 +68,6 @@ ma2oa-entry-database."
     (unless (member entry ma2oa-entry-database)
       (push entry ma2oa-entry-database))))
 
-(defun ma2oa~update-db (data)
-  "Update the entry database from the DATA give in parameter."
-  (let* ((entries (assoc-default 'aaData data))
-         (formatted-entries))
-    (mapc 'ma2oa~add-entry-to-db entries)))
-
-
 (defun ma2oa~format-entry (entry)
   "Format an ENTRY in org format to be added to the org agenda file."
   (let* ((org-entry (format ma2oa-org-template
@@ -103,20 +96,44 @@ ma2oa-entry-database."
       (kill-this-buffer))))
 
 (defun ma2oa-retrieve-next-releases ()
+  "Retrieve the next releases for metal from metal-archives.com."
   (interactive)
-  (request "https://www.metal-archives.com/release/ajax-upcoming/json/1"
-   :params '(("sEcho" . 1)) ;; FIXME: actually not used ! ("iDisplayLength" . ma2oa-max-vue))
-   :parser 'json-read
+  (let*
+      ((thisrequest (request "https://www.metal-archives.com/release/ajax-upcoming/json/1"
+                             :params '(("sEcho" . 1))
+                             :parser 'json-read
+                             :sync t
+                             :error
+                             (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
+                                            (error "Got error: %S" error-thrown)))))
 
-   :success (cl-function
-             (lambda (&key data &allow-other-keys)
-               (setq ma2oa-entry-database '())
-               (ma2oa~update-db data)
-               (ma2oa~db-to-agenda)))
+       (data (request-response-data thisrequest))
+       (nb-elements (assoc-default 'iTotalRecords data))
+       (entries (assoc-default 'aaData data))
+       (i (length entries)))
 
-   :error
-   (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
-                  (message "Got error: %S" error-thrown)))))
+    ;; Initialisation (by adding current entries as we are forced to get them)
+    (setq ma2oa-entry-database '())
+    (mapc 'ma2oa~add-entry-to-db entries)
+
+    ;; Add the following up entries to the data base
+    (while (< i nb-elements)
+      (progn
+        (setq thisrequest  (request "https://www.metal-archives.com/release/ajax-upcoming/json/1"
+                                    :params `(("sEcho" . 1) ("iDisplayStart" . ,i)) ;; FIXME: actually not used ! ("iDisplayLength" . ma2oa-max-vue))
+                                    :parser 'json-read
+                                    :sync t
+
+                                    :error
+                                    (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
+                                                   (error "Got error: %S" error-thrown)))))
+        (setq data (request-response-data thisrequest))
+        (setq entries (assoc-default 'aaData data))
+        (setq i (+ i (length entries)))
+        (mapc 'ma2oa~add-entry-to-db entries)))
+
+    ;; Generate the agenda from the db
+    (ma2oa~db-to-agenda)))
 
 (provide 'ma2oa)
 
