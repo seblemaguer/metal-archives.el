@@ -32,23 +32,29 @@
 (require 'request)
 (require 'json)
 
-(defvar ma2oa-max-vue 10
-  "The maximum number of retrieved entries")
+(defcustom ma2oa-max-vue 10
+  "The maximum number of retrieved entries"
+  :group 'metal-archive-to-org-agenda)
 
-(defvar ma2oa-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
-  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted.")
+(defcustom ma2oa-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
+  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted."
+  :group 'metal-archive-to-org-agenda)
 
-(defvar ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
-  "Regexp to parse the date coming from metal-archives.com")
+(defcustom ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
+  "Regexp to parse the date coming from metal-archives.com"
+  :group 'metal-archive-to-org-agenda)
 
-(defvar ma2oa-output-date-format "\\1 \\2, \\3"
-  "Substitution regexp generated based on the groups captured by the input regexp.")
+(defcustom ma2oa-output-date-format "\\1 \\2, \\3"
+  "Substitution regexp generated based on the groups captured by the input regexp."
+  :group 'metal-archive-to-org-agenda)
+
+(defcustom ma2oa-target-file "~/.emacs.d/ma-archive.org"
+  "The release org formatted file"
+  :group 'metal-archive-to-org-agenda)
 
 (defvar ma2oa-entry-database '()
   "The release entry database set.")
 
-(defvar ma2oa-target-file "~/.emacs.d/ma-releases.org"
-  "The release org formatted file")
 
 (cl-defstruct ma2oa-entry artist album type genre date)
 
