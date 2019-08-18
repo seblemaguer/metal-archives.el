@@ -31,6 +31,7 @@
 (require 'cl-lib)
 (require 'request)
 (require 'json)
+(require 'alert)
 
 (defcustom ma2oa-max-vue 10
   "The maximum number of retrieved entries"
@@ -52,6 +53,17 @@
   "The release org formatted file"
   :group 'metal-archive-to-org-agenda)
 
+(defcustom ma2oa-favorite-artists '()
+  "The list of artists flagged as \"We want them!\""
+  :group 'metal-archive-to-org-agenda)
+
+(defcustom ma2oa-alert-level 'normal
+  "The level of the alert raised when a release is from a favorite artists"
+  :group 'metal-archive-to-org-agenda)
+
+(defvar ma2oa-favorite-handle 'ma2oa-favorite-alert
+  "The handle of a release of an artist which is wanted.")
+
 (defvar ma2oa-entry-database '()
   "The release entry database set.")
 
@@ -70,6 +82,9 @@ ma2oa-entry-database."
                                                                 ma2oa-output-date-format
                                                                 (aref vector-entry 4))))
          (entry (make-ma2oa-entry :artist artist :album album :type type :genre genre :date date)))
+
+    (when (member (ma2oa-entry-artist entry) ma2oa-favorite-artists)
+      (funcall ma2oa-favorite-handle entry))
 
     (unless (member entry ma2oa-entry-database)
       (push entry ma2oa-entry-database))))
@@ -100,6 +115,15 @@ ma2oa-entry-database."
 
       ;; Close the buffer
       (kill-this-buffer))))
+
+(defun ma2oa-favorite-alert (entry)
+  "Documentation."
+  (alert (format "%s from %s is going to be released the following date %s"
+                 (ma2oa-entry-album entry)
+                 (ma2oa-entry-artist entry)
+                 (ma2oa-entry-date entry))
+         :category 'release
+         :severity ma2oa-alert-level))
 
 (defun ma2oa-retrieve-next-releases ()
   "Retrieve the next releases for metal from metal-archives.com."
