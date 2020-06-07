@@ -37,34 +37,38 @@
 (require 'request)
 (require 'json)
 (require 'alert)
+(require 'ht)
 
+
 (defcustom ma2oa-max-vue 10
   "The maximum number of retrieved entries"
+  :type 'int
   :group 'metal-archive-to-org-agenda)
 
 (defcustom ma2oa-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
   "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted."
+  :type 'string
   :group 'metal-archive-to-org-agenda)
 
 (defcustom ma2oa-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
   "Regexp to parse the date coming from metal-archives.com"
+  :type 'regexp
   :group 'metal-archive-to-org-agenda)
 
 (defcustom ma2oa-output-date-format "\\1 \\2, \\3"
   "Substitution regexp generated based on the groups captured by the input regexp."
+  :type 'string
   :group 'metal-archive-to-org-agenda)
 
 (defcustom ma2oa-target-file (format "%s/ma-archive.org" user-emacs-directory)
   "The release org formatted file"
+  :type 'file
   :group 'metal-archive-to-org-agenda)
 
-(defcustom ma2oa-favorite-artists '()
-  "The list of artists flagged as \"We want them!\""
-  :group 'metal-archive-to-org-agenda)
+
 
-(defcustom ma2oa-alert-level 'normal
-  "The level of the alert raised when a release is from a favorite artists"
-  :group 'metal-archive-to-org-agenda)
+(defvar ma2oa-favorite-artists (ht-create)
+  "Hash-table of favorite artist. The key correspond to the artist name, the value to the priority value.")
 
 (defvar ma2oa-favorite-handle 'ma2oa-favorite-alert
   "The handle of a release of an artist which is wanted.")
@@ -91,7 +95,7 @@ ma2oa-entry-database."
                                                                 (aref vector-entry 4))))
          (entry (make-ma2oa-entry :artist artist :album album :type type :genre genre :date date)))
 
-    (when (member (ma2oa-entry-artist entry) ma2oa-favorite-artists)
+    (when (member (ma2oa-entry-artist entry) (ht-keys ma2oa-favorite-artists))
       (funcall ma2oa-favorite-handle entry))
 
     (unless (member entry ma2oa-entry-database)
@@ -133,7 +137,7 @@ ma2oa-entry-database."
                  (ma2oa-entry-artist entry)
                  (ma2oa-entry-date entry))
          :category 'release
-         :severity ma2oa-alert-level))
+         :severity (ht-get ma2oa-favorite-artists (ma2oa-entry-artist entry))))
 
 
 
