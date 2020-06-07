@@ -1,12 +1,13 @@
-;;; ma2oa.el ---   -*- lexical-binding: t; coding: utf-8 -*-
+;;; ma2oa.el --- Package to list future releases using Metal-Archive API  -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C)  8 January 2019
 ;;
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
-
+;; URL: https://github.com/seblemaguer/ma2oa.el
 ;; Package-Requires: ((emacs "25.2"))
-;; Keywords:
+;; Keywords: lisp, calendar
+;; Version: 0.1
 ;; Homepage:
 
 ;; ma2oa is free software; you can redistribute it and/or modify it
@@ -23,6 +24,10 @@
 ;; along with ma2oa.  If not, see http://www.gnu.org/licenses.
 
 ;;; Commentary:
+;;
+;; Package which list future releases using the Metal-Archive (metal-archives.com) API.
+;;
+;; The package supports synchronization with org-agenda as well as Alert notification for the favorite artists
 
 
 ;;; Code:
@@ -49,7 +54,7 @@
   "Substitution regexp generated based on the groups captured by the input regexp."
   :group 'metal-archive-to-org-agenda)
 
-(defcustom ma2oa-target-file "~/.emacs.d/ma-archive.org"
+(defcustom ma2oa-target-file (format "%s/ma-archive.org" user-emacs-directory)
   "The release org formatted file"
   :group 'metal-archive-to-org-agenda)
 
@@ -67,8 +72,11 @@
 (defvar ma2oa-entry-database '()
   "The release entry database set.")
 
+
 
 (cl-defstruct ma2oa-entry artist album type genre date)
+
+
 
 (defun ma2oa~add-entry-to-db (vector-entry)
   "Parse an VECTOR_ENTRY coming from the metal-archives.com
@@ -116,6 +124,8 @@ ma2oa-entry-database."
       ;; Close the buffer
       (kill-this-buffer))))
 
+
+
 (defun ma2oa-favorite-alert (entry)
   "Documentation."
   (alert (format "%s from %s is going to be released the following date %s"
@@ -124,6 +134,8 @@ ma2oa-entry-database."
                  (ma2oa-entry-date entry))
          :category 'release
          :severity ma2oa-alert-level))
+
+
 
 (defun ma2oa-retrieve-next-releases ()
   "Retrieve the next releases for metal from metal-archives.com."
