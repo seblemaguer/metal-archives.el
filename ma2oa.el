@@ -40,6 +40,7 @@
 (require 'ht)
 
 
+
 (defcustom ma2oa-max-vue 10
   "The maximum number of retrieved entries"
   :type 'int
@@ -75,8 +76,6 @@
 
 (defvar ma2oa-entry-database '()
   "The release entry database set.")
-
-
 
 (cl-defstruct ma2oa-entry artist album type genre date)
 
@@ -125,8 +124,8 @@ ma2oa-entry-database."
       ;; Save the buffer
       (save-buffer)
 
-      ;; Close the buffer
-      (kill-this-buffer))))
+      ;; Move back to previous buffer
+      (switch-to-buffer (other-buffer (current-buffer) 1)))))
 
 
 
