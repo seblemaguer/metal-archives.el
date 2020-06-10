@@ -40,24 +40,21 @@
 
 (defun ma2oa-load-artists-map ()
   "Loading the artist priority map stored in FiLENAME."
+
+  (setq ma2oa-favorite-artists (ht-create))
+
   (with-current-buffer (find-file artist-map-filename)
-    (setq ma2oa-favorite-artists (read (buffer-string)))
+    (goto-char (point-min))
+    (while (not (eobp))
+      (let ((elts)
+            (line (buffer-substring-no-properties
+                   (line-beginning-position) (line-end-position))))
+        (setq elts (split-string line "\t"))
+        (ht-set ma2oa-favorite-artists (nth 0 elts) (intern (nth 1 elts))))
+      (forward-line 1)))
 
-    ;; Close the buffer
-    (kill-this-buffer)))
-
-(defun ma2oa-save-artists-map ()
-  "Storing the artist priority map in FiLENAME."
-  (with-current-buffer (find-file artist-map-filename)
-    (erase-buffer)
-
-    (insert (prin1-to-string ma2oa-favorite-artists))
-
-    ;; Save the buffer
-    (save-buffer)
-
-    ;; Close the buffer
-    (kill-this-buffer)))
+  ;; Close the buffer
+    (kill-this-buffer))
 
 
 
