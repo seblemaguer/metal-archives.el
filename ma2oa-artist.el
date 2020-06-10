@@ -131,6 +131,11 @@
       (switch-to-buffer (other-buffer (current-buffer) 1))
       )))
 
+(defun ma2oa-add-cd-and-alert (entry)
+  "Handler to add the ENTRY to the database of CD to order and emit an alert."
+  (ma2oa-favorite-alert entry)
+  (add-to-list 'ma2oa-cd-to-flush entry))
+
 
 
 (provide 'ma2oa-artist)
