@@ -88,3 +88,25 @@ For perfomance constrained, it is advises to select a dedicated shopping list ta
 
 Finally, to simplify the population of the shopping list, a hook as been defined and can be set to the `metal-archives-favorite-handle`.
 This hook is named `metal-archives-shopping-list-add-release-and-alert`
+
+
+## Setup example
+
+My current setup is:
+
+```elisp
+  (use-package metal-archives
+    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
+    :commands (metal-archives-shopping-list-update
+               metal-archives-retrieve-next-releases
+               metal-archives-load-artists-map)
+    :hook
+    (kill-emacs . metal-archives-shopping-list-update)
+    (after-init . metal-archives-load-artists-map)
+
+    :init
+    (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
+
+    :config
+    (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
+```
