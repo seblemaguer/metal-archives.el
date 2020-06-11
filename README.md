@@ -18,15 +18,17 @@ The minimum recipe using quelpa is the following one:
 
 This packages provide four interactive functions:
   - `metal-archives-retrieve-next-releases`: synchronize the database of the upcoming releases
-  - `metal-archives-org-generate-org-from-db`: generates an org file containing *all* the upcoming releases
-  - `metal-archives-load-artists-map`: load the database of favorite artists (see ~FIXME~)
-  - `metal-archives-shopping-list-update`: update the shopping list of the upcoming releases for the favorite artists (see ~FIXME~)
+  - `metal-archives-org-generate-org-from-db`: generates an org file containing *all* the upcoming releases (see [here](#Org-interface))
+  - `metal-archives-load-artists-map`: load the database of favorite artists
+  - `metal-archives-shopping-list-update`: update the shopping list of the upcoming releases for the favorite artists (see [here](#Shopping-list))
 
 ## Provided extended features
 
 This package provides two extended features: an org interface and a shopping list management.
 
 ### Org interface
+
+This is defined in the file [metal-archives-org.el](metal-archives-org.el).
 
 The org interface provides a convenient to generate a org file containing all the upcoming releases.
 This file could be added in the org-agenda file list to monitor the releases
@@ -36,7 +38,12 @@ The org interface is controlled by:
   - the variable `metal-archives-org-template` which defines the template to represent a release node;
   - the function `metal-archives-org-generate-org-from-db` which is filling the `metal-archives-org-target-file` from the *already synchronized* release database.
 
+[metal-archives-org.el]:
+
 ### Shopping list
+
+
+This is defined in the file [metal-archives-shopping-list.el](metal-archives-shopping-list.el).
 
 The shopping list management is a refinement of the org interface.
 The idea of this extension is to provide a convenient way to store in a shopping list only releases of selected artits.
