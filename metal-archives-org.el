@@ -32,12 +32,12 @@
 
 
 
-(defcustom metal-archives-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
-  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted."
+(defcustom metal-archives-org-template "* %s - %s :%s:\nSCHEDULED: <%s>\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\n"
+  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, DATE and GENRE."
   :type 'string
   :group 'metal-archives)
 
-(defcustom metal-archives-target-file (format "%s/ma-archive.org" user-emacs-directory)
+(defcustom metal-archives-org-target-file (format "%s/ma-archive.org" user-emacs-directory)
   "The release org formatted file"
   :type 'file
   :group 'metal-archives)
@@ -51,21 +51,21 @@
                             (metal-archives-entry-artist entry)
                             (metal-archives-entry-album entry)
                             (metal-archives-entry-type entry)
-                            (metal-archives-entry-genre entry)
-                            (metal-archives-entry-date entry))))
+                            (org-read-date nil nil (metal-archives-entry-date entry) nil)
+                            (metal-archives-entry-genre entry))))
     (insert org-entry)))
 
 (defun metal-archives-org-generate-org-from-db ()
   "Generate the org-agenda buffer and update the global agenda using the entry database."
   (interactive)
   (let* ((coding-system-for-write 'utf-8))
-    (with-current-buffer (find-file metal-archives-target-file)
+    (with-current-buffer (find-file metal-archives-org-target-file)
 
       ;; Clean
       (erase-buffer)
 
       ;; Synchronize db and the file
-      (mapc 'metal-archives~format-entry metal-archives-entry-database)
+      (mapc 'metal-archives-org~format-entry metal-archives-entry-database)
 
       ;; Save the buffer
       (save-buffer)

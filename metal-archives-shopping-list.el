@@ -43,18 +43,24 @@
 (defvar metal-archives-shopping-list-cd-to-flush '())
 
 (defun metal-archives-shopping-list~generate-node (level cd)
-  (om-build-headline! :title-text (format "%s - %s" (metal-archives-entry-artist cd) (metal-archives-entry-album cd))
+  "Generate an entry at a specific LEVEL using the CD information."
+  (om-build-headline! :title-text (format "%s - %s"
+                                          (metal-archives-entry-artist cd)
+                                          (metal-archives-entry-album cd))
                       :level level
                       :tags (list (metal-archives-entry-type cd))
                       :todo-keyword "RELEASE"
                       :section-children (list
-                                         ;; (om-build-planning! :scheduled '(2018 1 1))
+                                         (om-build-planning! :scheduled
+                                                             (reverse (seq-subseq (parse-time-string (metal-archives-entry-date cd)) 3 6)))
                                          (om-build-property-drawer! (list (intern "GENRE")
                                                                           (intern (metal-archives-entry-genre cd)))
                                                                     '(CATEGORY RELEASE))
                                          )))
 
+
 (defun metal-archives-shopping-list~children-headline-set (children)
+  "Get the set of albums already in the shopping list."
   (let* ((headlines))
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
@@ -79,7 +85,7 @@
   cur-node)
 
 (defun metal-archives-shopping-list-update ()
-  "Update the CD order list."
+  "Update the shopping list."
   (interactive)
   (with-current-buffer (find-file metal-archives-shopping-list-target-file)
     (let* ((todo-tree (org-element-parse-buffer)))

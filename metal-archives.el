@@ -51,15 +51,11 @@
   :type 'string
   :group 'metal-archives)
 
-(defcustom metal-archives-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
-  "Regexp to parse the date coming from metal-archives.com"
-  :type 'regexp
-  :group 'metal-archives)
+(defconst metal-archives-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
+  "Regexp to parse the date coming from metal-archives.com")
 
-(defcustom metal-archives-output-date-format "\\1 \\2, \\3"
-  "Substitution regexp generated based on the groups captured by the input regexp."
-  :type 'string
-  :group 'metal-archives)
+(defconst metal-archives-output-date-format "\\1 \\2, \\3"
+  "Substitution regexp generated based on the groups captured by the input regexp.")
 
 (defvar metal-archives-favorite-handle 'metal-archives-favorite-alert
   "The handle of a release of an artist which is wanted.")
@@ -105,16 +101,16 @@ metal-archives-entry-database."
          (album (decode-coding-string (replace-regexp-in-string "<a[^>]*>\\([^<]*\\)<.*" "\\1" (aref vector-entry 1)) 'utf-8))
          (type (decode-coding-string (replace-regexp-in-string "[ -]" "_" (aref vector-entry 2)) 'utf-8))
          (genre (decode-coding-string (aref vector-entry 3) 'utf-8))
-         (date (org-read-date nil nil (replace-regexp-in-string metal-archives-input-date-regexp
-                                                                metal-archives-output-date-format
-                                                                (aref vector-entry 4))))
+         (date (replace-regexp-in-string metal-archives-input-date-regexp
+                                         metal-archives-output-date-format
+                                         (aref vector-entry 4)))
          (entry (make-metal-archives-entry :artist artist :album album :type type :genre genre :date date)))
     (when (member artist (ht-keys metal-archives-favorite-artists))
       (funcall metal-archives-favorite-handle entry))
 
+    (message "%S" date)
     (unless (member entry metal-archives-entry-database)
       (push entry metal-archives-entry-database))))
-
 
 
 (defun metal-archives-favorite-alert (entry)
