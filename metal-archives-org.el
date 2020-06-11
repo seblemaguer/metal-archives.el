@@ -74,4 +74,6 @@
       (switch-to-buffer (other-buffer (current-buffer) 1)))))
 
 
+
+(provide 'metal-archives-org)
 ;;; metal-archives-org.el ends here

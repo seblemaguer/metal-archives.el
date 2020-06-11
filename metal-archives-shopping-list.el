@@ -40,21 +40,21 @@
 (defcustom metal-archives-shopping-list-root-node "VVV"
   "Headline value whose children are the CDs to order.")
 
-(defvar metal-archives-shopping-list-cd-to-flush '())
+(defvar metal-archives-shopping-list-release-to-flush '())
 
-(defun metal-archives-shopping-list~generate-node (level cd)
-  "Generate an entry at a specific LEVEL using the CD information."
+(defun metal-archives-shopping-list~generate-node (level release)
+  "Generate an entry at a specific LEVEL using the RELEASE information."
   (om-build-headline! :title-text (format "%s - %s"
-                                          (metal-archives-entry-artist cd)
-                                          (metal-archives-entry-album cd))
+                                          (metal-archives-entry-artist release)
+                                          (metal-archives-entry-album release))
                       :level level
-                      :tags (list (metal-archives-entry-type cd))
+                      :tags (list (metal-archives-entry-type release))
                       :todo-keyword "RELEASE"
                       :section-children (list
                                          (om-build-planning! :scheduled
-                                                             (reverse (seq-subseq (parse-time-string (metal-archives-entry-date cd)) 3 6)))
+                                                             (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
                                          (om-build-property-drawer! (list (intern "GENRE")
-                                                                          (intern (metal-archives-entry-genre cd)))
+                                                                          (intern (metal-archives-entry-genre release)))
                                                                     '(CATEGORY RELEASE))
                                          )))
 
@@ -72,16 +72,16 @@
   (let* ((level (+ 1 (org-element-property :level cur-node)))
          (children (om-get-children cur-node))
          (headline-set (metal-archives-shopping-list~children-headline-set children)))
-    (dolist (cd metal-archives-shopping-list-cd-to-flush)
-      (unless (member (format "%s - %s" (metal-archives-entry-artist cd) (metal-archives-entry-album cd)) headline-set)
-        (setq children (append children (list (metal-archives-shopping-list~generate-node level cd))))))
+    (dolist (release metal-archives-shopping-list-release-to-flush)
+      (unless (member (format "%s - %s" (metal-archives-entry-artist release) (metal-archives-entry-album release)) headline-set)
+        (setq children (append children (list (metal-archives-shopping-list~generate-node level release))))))
     (om-set-children children cur-node)))
 
-(defun metal-archives-shopping-list~update-cd (cur-node)
+(defun metal-archives-shopping-list~update-release (cur-node)
   "Recursive browsing and updating of the tree which root is given by CUR-NODE in order to add the RELEASE."
   (if (string= (org-element-property :raw-value cur-node) metal-archives-shopping-list-root-node)
       (setq cur-node (metal-archives-shopping-list~add-release cur-node))
-    (om-map-children* (--map (metal-archives-shopping-list~update-cd it) it) cur-node))
+    (om-map-children* (--map (metal-archives-shopping-list~update-release it) it) cur-node))
   cur-node)
 
 (defun metal-archives-shopping-list-update ()
@@ -99,21 +99,21 @@
       ;; Update the todo list
       (dolist (elt todo-tree)
         (when (eq (org-element-type elt) 'headline)
-          (setq elt (om-map-children* (--map (metal-archives-shopping-list~update-cd it) it) elt)))
+          (setq elt (om-map-children* (--map (metal-archives-shopping-list~update-release it) it) elt)))
         (insert (om-to-string elt)))
 
       ;; Flush
       (save-buffer)
-      (setq metal-archives-cd-to-flush '())
+      (setq metal-archives-release-to-flush '())
 
       ;; Switch back to the previous buffer
       (switch-to-buffer (other-buffer (current-buffer) 1))
       )))
 
-(defun metal-archives-shopping-list-add-cd-and-alert (entry)
-  "Handler to add the ENTRY to the database of CD to order and emit an alert."
+(defun metal-archives-shopping-list-add-release-and-alert (entry)
+  "Handler to add the ENTRY to the database of release to order and emit an alert."
   (metal-archives-favorite-alert entry)
-  (add-to-list 'metal-archives-shopping-list-cd-to-flush entry))
+  (add-to-list 'metal-archives-shopping-list-release-to-flush entry))
 
 
 
