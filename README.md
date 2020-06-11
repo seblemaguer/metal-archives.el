@@ -34,6 +34,23 @@ This packages provide four interactive functions:
   - `metal-archives-load-artists-map`: load the database of favorite artists
   - `metal-archives-shopping-list-update`: update the shopping list of the upcoming releases for the favorite artists (see [here](#Shopping-list))
 
+## Favorite artists
+
+A management of favorite artists is implemented in the package.
+It consists of two parts:
+  1. a database of favorite artits
+  2. an handle which triggers a specific action when a release from the favorite artist is spotted.
+
+The database is a hash table where the key of the element is the artist name and the value the priority stored in the `alert` format (the incremental priority list: `trivial`, `low`, `normal`, `moderate`, `high`, `urgent`).
+The variable `metal-archives-artist-map-filename` defines the database file.
+This file is assumed to be a Tab Separated Value (TSV) file containing two columns (artist, priority).
+The helper  `metal-archives-load-artists-map` is provided to load this database.
+
+The handle is defined by `metal-archives-favorite-handle`.
+By default, it is set to `metal-archives-favorite-alert`.
+Of course this handle can be customized.
+
+
 ## Provided extended features
 
 This package provides two extended features: an org interface and a shopping list management.
@@ -65,7 +82,9 @@ The shopping list management is controlled by:
   - the variable `metal-archives-shopping-list-root-node` which defines the title of the root node containing the shopping list;
   - the function `metal-archives-shopping-list-update` which updates the shopping list using a database (stored in `metal-archives-shopping-list-release-to-flush`) previously populated.
 
-The variable `metal-archives-shopping-list-release-to-flush` is a list of releases as defined in the structure `metal-archives-entry` from metal-archives.el
+The variable `metal-archives-shopping-list-release-to-flush` is a list of releases as defined in the structure `metal-archives-entry` from [metal-archives.el](metal-archives.el).
+
+For perfomance constrained, it is advises to select a dedicated shopping list target file as the whole file is currently parsed.
 
 Finally, to simplify the population of the shopping list, a hook as been defined and can be set to the `metal-archives-favorite-handle`.
 This hook is named `metal-archives-shopping-list-add-release-and-alert`
