@@ -2,6 +2,18 @@
 
 The goal of this package is to generate an org-file for the upcoming releases given by metal-archives.
 
+## Dependencies
+
+This package depends on the following packages:
+  - `request`
+  - `json`
+  - `ht`
+  - `alert`
+  - `org-mode`
+  - `om` - https://github.com/ndwarshuis/om.el
+
+All packages except `om` are available on melpa.
+
 ## How to install
 
 As the current packages depends on `om.el` (), it is suggested to use straight or quelpa to install it:

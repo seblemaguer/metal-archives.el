@@ -31,7 +31,6 @@
 
 ;;; Code:
 
-(require 'cl-lib)
 (require 'request)
 (require 'json)
 (require 'ht)
