@@ -68,9 +68,11 @@
 
 
 
-(defvar metal-archives-artist-map-filename (format "%s/artist-map.cache" user-emacs-directory) ;
+(defcustom metal-archives-artist-map-filename (format "%s/artist-map.cache" user-emacs-directory) ;
   "The cache containing the hashtable which key are the favorite
-  artists and the corresponding value is the priority.")
+  artists and the corresponding value is the priority."
+  :type 'file
+  :group 'metal-archives)
 
 (defun metal-archives-load-artists-map ()
   "Loading the artist priority map stored in FiLENAME."
