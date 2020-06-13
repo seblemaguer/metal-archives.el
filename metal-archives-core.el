@@ -155,10 +155,10 @@ metal-archives-entry-database."
 
                              :error
                              (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
-                                            (error "Got error: %S" error-thrown)))))
-        (setq data (request-response-data thisrequest))
-        (setq entries (assoc-default 'aaData data))
-        (setq i (+ i (length entries)))
+                                            (error "Got error: %S" error-thrown))))
+              data (request-response-data thisrequest)
+              entries (assoc-default 'aaData data)
+              i (+ i (length entries)))
         (mapc 'metal-archives~add-entry-to-db entries)))))
 
 
