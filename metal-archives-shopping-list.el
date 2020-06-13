@@ -36,14 +36,20 @@
 
 
 
-(defcustom metal-archives-shopping-list-target-file "~/test.org"
-  "File containing the order list in an org-mode format.")
+(defcustom metal-archives-shopping-list-target-file "~/.emacs.d/shopping_list.org"
+  "File containing the order list in an org-mode format."
+  :type 'file
+  :group 'metal-archives)
 
-(defcustom metal-archives-shopping-list-root-node "VVV"
-  "Headline value whose children are the CDs to order.")
+(defcustom metal-archives-shopping-list-root-node "CD"
+  "Headline value whose children are the CDs to order."
+  :type 'string
+  :group 'metal-archives)
 
 (defcustom metal-archives-shopping-list-release-threshold 'normal
-  "Priority threshold level to add a release to the shopping list.")
+  "Priority threshold level to add a release to the shopping list."
+  :type 'symbol
+  :group 'metal-archives)
 
 (defvar metal-archives-shopping-list-release-to-flush '())
 
