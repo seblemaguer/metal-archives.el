@@ -31,6 +31,8 @@
 (require 'org)
 (require 'org-element)
 (require 'om)
+(require 'alert)
+(require 'ht)
 
 
 
@@ -39,6 +41,9 @@
 
 (defcustom metal-archives-shopping-list-root-node "VVV"
   "Headline value whose children are the CDs to order.")
+
+(defcustom metal-archives-shopping-list-release-threshold 'normal
+  "Priority threshold level to add a release to the shopping list.")
 
 (defvar metal-archives-shopping-list-release-to-flush '())
 
@@ -113,7 +118,11 @@
 (defun metal-archives-shopping-list-add-release-and-alert (entry)
   "Handler to add the ENTRY to the database of release to order and emit an alert."
   (metal-archives-favorite-alert entry)
-  (add-to-list 'metal-archives-shopping-list-release-to-flush entry))
+  (when (>
+         (cdr (assq (ht-get metal-archives-favorite-artists (metal-archives-entry-artist entry))
+                    alert-growl-priorities))
+         (cdr (assq metal-archives-shopping-list-release-threshold alert-growl-priorities)))
+      (add-to-list 'metal-archives-shopping-list-release-to-flush entry)))
 
 
 
