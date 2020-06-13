@@ -87,10 +87,10 @@
                    (line-beginning-position) (line-end-position))))
         (setq elts (split-string line "\t"))
         (ht-set metal-archives-favorite-artists (nth 0 elts) (intern (nth 1 elts))))
-      (forward-line 1)))
+      (forward-line 1))
 
   ;; Close the buffer
-    (kill-this-buffer))
+    (kill-this-buffer)))
 
 
 
