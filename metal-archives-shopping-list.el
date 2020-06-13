@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(require 'metal-archives)
+(require 'metal-archives-core)
 (require 'org)
 (require 'org-element)
 (require 'om)

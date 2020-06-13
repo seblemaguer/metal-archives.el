@@ -27,8 +27,7 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-(require 'metal-archives)
+(require 'metal-archives-core)
 
 
 
