@@ -66,7 +66,7 @@
                                                              (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
                                          (om-build-property-drawer! (list (intern "GENRE")
                                                                           (intern (metal-archives-entry-genre release)))
-                                                                    '(CATEGORY RELEASE))
+                                                                    '(CATEGORY Release))
                                          )))
 
 
