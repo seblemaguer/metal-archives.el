@@ -110,7 +110,7 @@
       ;; Update the todo list
       (dolist (elt todo-tree)
         (when (eq (org-element-type elt) 'headline)
-          (setq elt (om-map-children* (--map (metal-archives-shopping-list~update-release it) it) elt)))
+          (setq elt (metal-archives-shopping-list~update-release elt)))
         (insert (om-to-string elt)))
 
       ;; Flush
