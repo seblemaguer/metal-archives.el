@@ -30,7 +30,7 @@
 (require 'metal-archives-core)
 (require 'org)
 (require 'org-element)
-(require 'om)
+(require 'org-ml)
 (require 'alert)
 (require 'ht)
 
@@ -55,16 +55,16 @@
 
 (defun metal-archives-shopping-list~generate-node (level release)
   "Generate an entry at a specific LEVEL using the RELEASE information."
-  (om-build-headline! :title-text (format "%s - %s"
+  (org-ml-build-headline! :title-text (format "%s - %s"
                                           (metal-archives-entry-artist release)
                                           (metal-archives-entry-album release))
                       :level level
                       :tags (list (metal-archives-entry-type release))
                       :todo-keyword "RELEASE"
                       :section-children (list
-                                         (om-build-planning! :scheduled
+                                         (org-ml-build-planning! :scheduled
                                                              (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
-                                         (om-build-property-drawer! (list (intern "GENRE")
+                                         (org-ml-build-property-drawer! (list (intern "GENRE")
                                                                           (intern (metal-archives-entry-genre release)))
                                                                     '(CATEGORY Release))
                                          )))
@@ -81,18 +81,18 @@
 (defun metal-archives-shopping-list~add-release (cur-node)
   "Add release as a children node to CUR-NODE."
   (let* ((level (+ 1 (org-element-property :level cur-node)))
-         (children (om-get-children cur-node))
+         (children (org-ml-get-children cur-node))
          (headline-set (metal-archives-shopping-list~children-headline-set children)))
     (dolist (release metal-archives-shopping-list-release-to-flush)
       (unless (member (format "%s - %s" (metal-archives-entry-artist release) (metal-archives-entry-album release)) headline-set)
         (setq children (append children (list (metal-archives-shopping-list~generate-node level release))))))
-    (om-set-children children cur-node)))
+    (org-ml-set-children children cur-node)))
 
 (defun metal-archives-shopping-list~update-release (cur-node)
   "Recursive browsing and updating of the tree which root is given by CUR-NODE in order to add the RELEASE."
   (if (string= (org-element-property :raw-value cur-node) metal-archives-shopping-list-root-node)
       (setq cur-node (metal-archives-shopping-list~add-release cur-node))
-    (om-map-children* (--map (metal-archives-shopping-list~update-release it) it) cur-node))
+    (org-ml-map-children* (--map (metal-archives-shopping-list~update-release it) it) cur-node))
   cur-node)
 
 (defun metal-archives-shopping-list-update ()
@@ -111,7 +111,7 @@
       (dolist (elt todo-tree)
         (when (eq (org-element-type elt) 'headline)
           (setq elt (metal-archives-shopping-list~update-release elt)))
-        (insert (om-to-string elt)))
+        (insert (org-ml-to-string elt)))
 
       ;; Flush
       (save-buffer)
