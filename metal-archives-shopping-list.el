@@ -5,7 +5,7 @@
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "25.2"))
+;; Package-Requires: ((emacs "26.3") (org "9.3") (org-ml "20200902.133") (alert "1.2") (ht "2.3"))
 ;; Keywords:
 ;; Homepage:
 

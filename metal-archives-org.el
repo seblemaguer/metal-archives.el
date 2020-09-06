@@ -5,7 +5,7 @@
 
 ;; Author: Sébastien Le Maguer <sebastien.lemaguer@adaptcentre.ie>
 
-;; Package-Requires: ((emacs "25.2"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords:
 ;; Homepage:
 
