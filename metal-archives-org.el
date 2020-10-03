@@ -32,12 +32,12 @@
 
 
 (defcustom metal-archives-org-template "* %s - %s :%s:\nSCHEDULED: <%s>\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\n"
-  "Org entry template. The formatting assume the quadriplet ARTIST, ALBUM, TYPE, DATE and GENRE."
+  "Org entry template.  The formatting assume the quadriplet ARTIST, ALBUM, TYPE, DATE and GENRE."
   :type 'string
   :group 'metal-archives)
 
 (defcustom metal-archives-org-target-file (format "%s/ma-archive.org" user-emacs-directory)
-  "The release org formatted file"
+  "The release org formatted file."
   :type 'file
   :group 'metal-archives)
 
@@ -55,7 +55,7 @@
     (insert org-entry)))
 
 (defun metal-archives-org-generate-org-from-db ()
-  "Generate the org-agenda buffer and update the global agenda using the entry database."
+  "Generate the `org-agenda' buffer and update the global agenda using the entry database."
   (interactive)
   (let* ((coding-system-for-write 'utf-8))
     (with-current-buffer (find-file metal-archives-org-target-file)

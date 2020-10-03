@@ -37,7 +37,7 @@
 
 
 (defcustom metal-archives-shopping-list-target-file "~/.emacs.d/shopping_list.org"
-  "File containing the order list in an org-mode format."
+  "File containing the order list in an `org-mode' format."
   :type 'file
   :group 'metal-archives)
 
@@ -71,7 +71,7 @@
 
 
 (defun metal-archives-shopping-list~children-headline-set (children)
-  "Get the set of albums already in the shopping list."
+  "Get the set of albums already in the shopping list from the given CHILDREN."
   (let* ((headlines))
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
