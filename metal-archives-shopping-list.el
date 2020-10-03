@@ -75,7 +75,7 @@
   (let* ((headlines))
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
-        (add-to-list 'headlines (org-element-property :raw-value elt))))
+        (push 'headlines (org-element-property :raw-value elt))))
       (delete-dups headlines)))
 
 (defun metal-archives-shopping-list~add-release (cur-node)
@@ -115,7 +115,7 @@
 
       ;; Flush
       (save-buffer)
-      (setq metal-archives-release-to-flush '())
+      (setq metal-archives-shopping-list-release-to-flush '())
 
       ;; Switch back to the previous buffer
       (switch-to-buffer (other-buffer (current-buffer) 1))
