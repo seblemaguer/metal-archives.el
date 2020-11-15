@@ -50,8 +50,9 @@
                             (metal-archives-entry-artist entry)
                             (metal-archives-entry-album entry)
                             (metal-archives-entry-type entry)
+                            (metal-archives-entry-genre entry)
                             (org-read-date nil nil (metal-archives-entry-date entry) nil)
-                            (metal-archives-entry-genre entry))))
+                            )))
     (insert org-entry)))
 
 (defun metal-archives-org-generate-org-from-db ()
