@@ -7,6 +7,7 @@
 
 ;; Package-Requires: ((emacs "26.3") (org "9.3") (org-ml "20200902.133") (alert "1.2") (ht "2.3"))
 ;; Keywords:
+;; Version: 0.1
 ;; Homepage:
 
 ;; metal-archives-shopping-list is free software; you can redistribute it and/or modify it
@@ -75,7 +76,7 @@
   (let* ((headlines))
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
-        (push 'headlines (org-element-property :raw-value elt))))
+        (add-to-list 'headlines (org-element-property :raw-value elt))))
       (delete-dups headlines)))
 
 (defun metal-archives-shopping-list~add-release (cur-node)
