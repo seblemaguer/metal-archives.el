@@ -85,7 +85,8 @@
          (children (org-ml-get-children cur-node))
          (headline-set (metal-archives-shopping-list~children-headline-set children)))
     (dolist (release metal-archives-shopping-list-release-to-flush)
-      (unless (member (format "%s - %s" (metal-archives-entry-artist release) (metal-archives-entry-album release)) headline-set)
+      (unless (member (format "%s - %s" (metal-archives-entry-artist release)
+                              (metal-archives-entry-album release)) headline-set)
         (setq children (append children (list (metal-archives-shopping-list~generate-node level release))))))
     (org-ml-set-children children cur-node)))
 
