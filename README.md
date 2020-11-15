@@ -10,20 +10,15 @@ This package depends on the following packages:
   - `ht`
   - `alert`
   - `org-mode`
-  - `om` - https://github.com/ndwarshuis/om.el
-
-All packages except `om` are available on melpa.
+  - `org-ml` https://github.com/ndwarshuis/org-ml
 
 ## How to install
-
-As the current packages depends on `om.el` (), it is suggested to use straight or quelpa to install it:
 
 The minimum recipe using quelpa is the following one:
 
 ```elisp
 (use-package metal-archives
-    :ensure quelpa
-    :quelpa (metal-archives :repo "seblemaguer/metal-archives.el" :fetcher github))
+    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
 ```
 
 ## Entry points
