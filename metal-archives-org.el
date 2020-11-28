@@ -1,4 +1,4 @@
-;;; metal-archives-org.el ---   -*- lexical-binding: t; coding: utf-8 -*-
+;;; metal-archives-org.el --- Org-mode export of the metal archive database  -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C) 10 June 2020
 ;;
@@ -6,8 +6,9 @@
 ;; Author: Sébastien Le Maguer <sebastien.lemaguer@adaptcentre.ie>
 
 ;; Package-Requires: ((emacs "26.3"))
-;; Keywords:
-;; Homepage:
+;; Keywords: org, calendar
+;; Version: 0.1
+;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives-org is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by
@@ -24,6 +25,8 @@
 
 ;;; Commentary:
 
+;; This package provides an helper, metal-archives-org-generate-org-from-db, to dump the metal
+;; archives database to an org-mode file
 
 ;;; Code:
 
@@ -41,7 +44,6 @@
   :type 'file
   :group 'metal-archives)
 
-
 
 
 (defun metal-archives-org~format-entry (entry)
@@ -51,8 +53,7 @@
                             (metal-archives-entry-album entry)
                             (metal-archives-entry-type entry)
                             (metal-archives-entry-genre entry)
-                            (org-read-date nil nil (metal-archives-entry-date entry) nil)
-                            )))
+                            (org-read-date nil nil (metal-archives-entry-date entry) nil))))
     (insert org-entry)))
 
 (defun metal-archives-org-generate-org-from-db ()

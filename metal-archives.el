@@ -1,14 +1,13 @@
-;;; metal-archives-core.el --- Package to list future releases using Metal-Archive API  -*- lexical-binding: t; coding: utf-8 -*-
+;;; metal-archives.el --- Package to list future releases using Metal-Archive API  -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C)  8 January 2019
 ;;
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
-;; URL: https://github.com/seblemaguer/metal-archives.el
-;; Package-Requires: ((emacs "26.3") (alert "1.2") (ht "2.3"))
+;; Package-Requires: ((emacs "26.3") (alert "1.2") (ht "2.3") (request "0.2.2"))
 ;; Keywords: lisp, calendar
 ;; Version: 0.1
-;; Homepage:
+;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by
@@ -88,7 +87,7 @@
         (ht-set metal-archives-favorite-artists (nth 0 elts) (intern (nth 1 elts))))
       (forward-line 1))
 
-  ;; Close the buffer
+    ;; Close the buffer
     (kill-this-buffer)))
 
 
@@ -161,4 +160,5 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
 
 
 (provide 'metal-archives)
-;;; metal-archives-core.el ends here
+
+;;; metal-archives.el ends here

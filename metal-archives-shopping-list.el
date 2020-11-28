@@ -1,14 +1,14 @@
-;;; metal-archives-shopping-list.el ---   -*- lexical-binding: t; coding: utf-8 -*-
+;;; metal-archives-shopping-list.el --- Add shopping list generation support to metal archives   -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C)  7 June 2020
 ;;
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "26.3") (org "9.3") (org-ml "5.2.0") (alert "1.2") (ht "2.3"))
-;; Keywords:
+;; Package-Requires: ((emacs "26.3") (org-ml "5.2.0") (alert "1.2") (ht "2.3"))
+;; Keywords: org, calendar
 ;; Version: 0.1
-;; Homepage:
+;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives-shopping-list is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 
 ;;; Commentary:
 
+;; This package provide a support to manage a shopping list of future releases using the metal
+;; archives database.
 
 ;;; Code:
 
@@ -37,7 +39,8 @@
 
 
 
-(defcustom metal-archives-shopping-list-target-file "~/.emacs.d/shopping_list.org"
+(defcustom metal-archives-shopping-list-target-file (format "%s/shopping_list.org"
+                                                            user-emacs-directory)
   "File containing the order list in an `org-mode' format."
   :type 'file
   :group 'metal-archives)
@@ -57,18 +60,17 @@
 (defun metal-archives-shopping-list~generate-node (level release)
   "Generate an entry at a specific LEVEL using the RELEASE information."
   (org-ml-build-headline! :title-text (format "%s - %s"
-                                          (metal-archives-entry-artist release)
-                                          (metal-archives-entry-album release))
-                      :level level
-                      :tags (list (metal-archives-entry-type release))
-                      :todo-keyword "RELEASE"
-                      :section-children (list
-                                         (org-ml-build-planning! :scheduled
-                                                             (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
-                                         (org-ml-build-property-drawer! (list (intern "GENRE")
-                                                                          (intern (metal-archives-entry-genre release)))
-                                                                    '(CATEGORY Release))
-                                         )))
+                                              (metal-archives-entry-artist release)
+                                              (metal-archives-entry-album release))
+                          :level level
+                          :tags (list (metal-archives-entry-type release))
+                          :todo-keyword "RELEASE"
+                          :section-children (list
+                                             (org-ml-build-planning! :scheduled
+                                                                     (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
+                                             (org-ml-build-property-drawer! (list (intern "GENRE")
+                                                                                  (intern (metal-archives-entry-genre release)))
+                                                                            '(CATEGORY Release)))))
 
 
 (defun metal-archives-shopping-list~children-headline-set (children)
@@ -77,7 +79,7 @@
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
         (add-to-list 'headlines (org-element-property :raw-value elt))))
-      (delete-dups headlines)))
+    (delete-dups headlines)))
 
 (defun metal-archives-shopping-list~add-release (cur-node)
   "Add release as a children node to CUR-NODE."
@@ -120,8 +122,7 @@
       (setq metal-archives-shopping-list-release-to-flush '())
 
       ;; Switch back to the previous buffer
-      (switch-to-buffer (other-buffer (current-buffer) 1))
-      )))
+      (switch-to-buffer (other-buffer (current-buffer) 1)))))
 
 (defun metal-archives-shopping-list-add-release-and-alert (entry)
   "Handler to add the ENTRY to the database of release to order and emit an alert."
@@ -130,7 +131,7 @@
          (cdr (assq (ht-get metal-archives-favorite-artists (metal-archives-entry-artist entry))
                     alert-growl-priorities))
          (cdr (assq metal-archives-shopping-list-release-threshold alert-growl-priorities)))
-      (add-to-list 'metal-archives-shopping-list-release-to-flush entry)))
+    (add-to-list 'metal-archives-shopping-list-release-to-flush entry)))
 
 
 
