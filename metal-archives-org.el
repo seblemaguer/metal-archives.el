@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(require 'metal-archives-core)
+(require 'metal-archives)
 
 
 
