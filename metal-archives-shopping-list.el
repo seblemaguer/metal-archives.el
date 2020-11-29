@@ -78,7 +78,7 @@
   (let* ((headlines))
     (dolist (elt children)
       (when (eq (org-element-type elt) 'headline)
-        (add-to-list 'headlines (org-element-property :raw-value elt))))
+        (push (org-element-property :raw-value elt) headlines)))
     (delete-dups headlines)))
 
 (defun metal-archives-shopping-list~add-release (cur-node)
