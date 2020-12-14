@@ -1,4 +1,4 @@
-;;; metal-archives.el --- Package to list future releases using Metal-Archive API  -*- lexical-binding: t; coding: utf-8 -*-
+;;; metal-archives.el --- List future releases using Metal-Archives API  -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C)  8 January 2019
 ;;
@@ -42,11 +42,6 @@
 (defcustom metal-archives-max-vue 10
   "The maximum number of retrieved entries."
   :type 'int
-  :group 'metal-archives)
-
-(defcustom metal-archives-org-template "* %s - %s :%s:\n:PROPERTIES:\n:GENRE: %s\n:CATEGORY: Release\n:END:\nSCHEDULED: <%s>\n"
-  "Org entry template.  The formatting assume the quadriplet ARTIST, ALBUM, TYPE, GENRE and DATE everything string formatted."
-  :type 'string
   :group 'metal-archives)
 
 (defconst metal-archives-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
@@ -112,7 +107,7 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
 
 (defun metal-archives-favorite-alert (entry)
   "Alert handle to signal a new release ENTRY."
-  (alert (format "%s from %s is going to be released the following date %s"
+  (alert (format "%s from %s will be released on %s"
                  (metal-archives-entry-album entry)
                  (metal-archives-entry-artist entry)
                  (metal-archives-entry-date entry))
