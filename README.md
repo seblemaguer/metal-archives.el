@@ -1,4 +1,8 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # Metal-archives to org-agenda package
+
+melpa information: [![MELPA](https://melpa.org/packages/metal-archives-badge.svg)](https://melpa.org/#/metal-archives)
 
 The goal of this package is to generate an org-file for the upcoming releases given by metal-archives.
 
@@ -14,11 +18,10 @@ This package depends on the following packages:
 
 ## How to install
 
-The minimum recipe using quelpa is the following one:
+The minimum recipe using melpa is the following one:
 
 ```elisp
-(use-package metal-archives
-    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
+(use-package metal-archives :ensure t)
 ```
 
 ## Entry points
@@ -90,18 +93,29 @@ This hook is named `metal-archives-shopping-list-add-release-and-alert`
 My current setup is:
 
 ```elisp
-  (use-package metal-archives
-    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
-    :commands (metal-archives-shopping-list-update
-               metal-archives-retrieve-next-releases
-               metal-archives-load-artists-map)
-    :hook
-    (kill-emacs . metal-archives-shopping-list-update)
-    (after-init . metal-archives-load-artists-map)
+(use-package metal-archives
+  :straight (metal-archives :type git
+                            :host github
+                            :repo "seblemaguer/metal-archives.el"
+                            :files ("metal-archives.el"))
+  )
 
-    :init
-    (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
+(use-package metal-archives-shopping-list
+  :straight (metal-archives-shopping-list :type git
+                                          :host github
+                                          :repo "seblemaguer/metal-archives.el"
+                                          :files ("metal-archives-shopping-list.el"))
+  :commands (metal-archives-shopping-list-update
+             metal-archives-retrieve-next-releases
+             metal-archives-load-artists-map)
+  :hook
+  (kill-emacs . metal-archives-shopping-list-update)
+  (after-init . metal-archives-load-artists-map)
 
-    :config
-    (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
+
+  :init
+  (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
+
+  :config
+  (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
 ```
