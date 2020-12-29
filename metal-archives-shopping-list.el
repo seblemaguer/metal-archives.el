@@ -1,4 +1,4 @@
-;;; metal-archives-shopping-list.el --- Add shopping list generation support to metal archives   -*- lexical-binding: t; coding: utf-8 -*-
+;;; metal-archives-shopping-list.el --- Add shopping list generation support to metal-archives   -*- lexical-binding: t; coding: utf-8 -*-
 
 ;; Copyright (C)  7 June 2020
 ;;
