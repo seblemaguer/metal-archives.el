@@ -5,7 +5,7 @@
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "26.3") (org-ml "5.2.0") (alert "1.2") (ht "2.3") (metal-archives "0.1"))
+;; Package-Requires: ((emacs "26.3") (org-ml "5.5.2") (alert "1.2") (ht "2.3") (metal-archives "0.1"))
 ;; Keywords: org, calendar
 ;; Version: 0.1
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
