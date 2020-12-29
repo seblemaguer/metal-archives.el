@@ -65,10 +65,10 @@ The org interface is controlled by:
   - the variable `metal-archives-org-template` which defines the template to represent a release node;
   - the function `metal-archives-org-generate-org-from-db` which is filling the `metal-archives-org-target-file` from the *already synchronized* release database.
 
-[metal-archives-org.el]:
 
 ### Shopping list
 
+melpa information: [![MELPA](https://melpa.org/packages/metal-archives-shopping-list-badge.svg)](https://melpa.org/#/metal-archives-shopping-list)
 
 This is defined in the file [metal-archives-shopping-list.el](metal-archives-shopping-list.el).
 
@@ -90,28 +90,15 @@ This hook is named `metal-archives-shopping-list-add-release-and-alert`
 
 ## Setup example
 
-My current setup is:
+A close setup to what I am using is the following:
 
 ```elisp
-(use-package metal-archives
-  :straight (metal-archives :type git
-                            :host github
-                            :repo "seblemaguer/metal-archives.el"
-                            :files ("metal-archives.el"))
-  )
-
 (use-package metal-archives-shopping-list
-  :straight (metal-archives-shopping-list :type git
-                                          :host github
-                                          :repo "seblemaguer/metal-archives.el"
-                                          :files ("metal-archives-shopping-list.el"))
-  :commands (metal-archives-shopping-list-update
-             metal-archives-retrieve-next-releases
-             metal-archives-load-artists-map)
+  :ensure t
+  :commands (metal-archives-shopping-list-update)
   :hook
   (kill-emacs . metal-archives-shopping-list-update)
   (after-init . metal-archives-load-artists-map)
-
 
   :init
   (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
