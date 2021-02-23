@@ -154,6 +154,41 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
         (mapc 'metal-archives~add-entry-to-db entries)))))
 
 
+
+(defun metal-archives~format-entry (entry)
+  "Generate an entry for the metal archives release buffer."
+  (let* ((tabulated-entry (vector
+                           (metal-archives-entry-date entry)
+                           (metal-archives-entry-artist entry)
+                           (metal-archives-entry-album entry)
+                           (metal-archives-entry-genre entry)
+                           (metal-archives-entry-type entry))))
+    (list "0" tabulated-entry)))
+
+
+(define-derived-mode metal-archives-list-mode tabulated-list-mode "metal-archives-list-mode"
+  "Major mode of the metal archives release buffer."
+  (setq tabulated-list-format [("Date" 15 t)
+                               ("Artist" 25 nil)
+                               ("Album"  40 nil)
+                               ("Genre" 25 t)
+                               ("Type"  0 nil)]);; last columnt takes what left
+  (setq tabulated-list-entries
+        (mapcar 'metal-archives~format-entry metal-archives-entry-database))
+  (setq tabulated-list-padding 4
+        tabulated-list-sort-key (cons "Date" nil))
+  (tabulated-list-init-header)
+  (tabulated-list-print t))
+
+(defun metal-archives-list-releases ()
+  "List the releases in a tabulated buffer named *Metal Releases*."
+  (interactive)
+  (with-current-buffer (get-buffer-create "*Metal Releases*")
+    (metal-archives-list-mode))
+  (switch-to-buffer  "*Metal Releases*"))
+
+
+
 (provide 'metal-archives)
 
 ;;; metal-archives.el ends here
