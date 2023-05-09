@@ -1,13 +1,13 @@
 ;;; metal-archives-shopping-list.el --- Add shopping list generation support to metal-archives   -*- lexical-binding: t; coding: utf-8 -*-
 
-;; Copyright (C)  7 June 2020
+;; Copyright (C) 2020 - 2023
 ;;
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "26.3") (org-ml "5.5.2") (alert "1.2") (ht "2.3") (metal-archives "0.1"))
+;; Package-Requires: ((emacs "26.3") (org-ml "5.8.7") (alert "1.2") (ht "2.3") (metal-archives "0.1"))
 ;; Keywords: org, calendar
-;; Version: 0.1
+;; Version: 0.2
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives-shopping-list is free software; you can redistribute it and/or modify it
@@ -68,9 +68,9 @@
                           :section-children (list
                                              (org-ml-build-planning! :scheduled
                                                                      (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
-                                             (org-ml-build-property-drawer! (list (intern "GENRE")
-                                                                                  (intern (metal-archives-entry-genre release)))
-                                                                            '(CATEGORY Release)))))
+                                             (org-ml-build-property-drawer! (list "GENRE"
+                                                                                  (metal-archives-entry-genre release))
+                                                                            '("CATEGORY" "Release")))))
 
 
 (defun metal-archives-shopping-list~children-headline-set (children)
