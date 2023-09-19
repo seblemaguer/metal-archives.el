@@ -55,7 +55,18 @@
   :type 'symbol
   :group 'metal-archives)
 
+(defcustom metal-archives-shopping-list-release-todo-keyword "TODO"
+  "The TODO keyword associated to the release entry."
+  :type 'string
+  :group 'metal-archives)
+
+(defcustom metal-archives-shopping-list-release-category "RELEASE"
+  "The category associated to the release entry."
+  :type 'string
+  :group 'metal-archives)
+
 (defvar metal-archives-shopping-list-release-to-flush '())
+
 
 (defun metal-archives-shopping-list~generate-node (level release)
   "Generate an entry at a specific LEVEL using the RELEASE information."
@@ -64,13 +75,13 @@
                                               (metal-archives-entry-album release))
                           :level level
                           :tags (list (metal-archives-entry-type release))
-                          :todo-keyword "RELEASE"
+                          :todo-keyword metal-archives-shopping-list-release-todo-keyword
                           :section-children (list
                                              (org-ml-build-planning! :scheduled
                                                                      (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
                                              (org-ml-build-property-drawer! (list "GENRE"
                                                                                   (metal-archives-entry-genre release))
-                                                                            '("CATEGORY" "Release")))))
+                                                                            `("CATEGORY" ,metal-archives-shopping-list-release-category)))))
 
 
 (defun metal-archives-shopping-list~children-headline-set (children)
