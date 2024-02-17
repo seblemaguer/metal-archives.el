@@ -110,9 +110,16 @@
     (org-ml-map-children* (--map (metal-archives-shopping-list~update-release it) it) cur-node))
   cur-node)
 
-(defun metal-archives-shopping-list-update ()
-  "Update the shopping list."
-  (interactive)
+(defun metal-archives-shopping-list-update (&optional retrieve)
+  "Update the shopping list.
+if RETRIEVE is non nil, also ran `metal-archives-retrieve-next-releases'"
+  (interactive "P")
+
+  ;; Retrieve the new releases if required
+  (when retrieve
+    (metal-archives-retrieve-next-releases))
+
+  ;; Update the shopping list
   (with-current-buffer (find-file metal-archives-shopping-list-target-file)
     (let* ((todo-tree (org-element-parse-buffer)))
       ;; We don't need the content, everything will be replaced!
