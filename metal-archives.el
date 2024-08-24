@@ -44,6 +44,11 @@
   :type 'int
   :group 'metal-archives)
 
+(defcustom metal-archives-valid-types '("full_length" "ep" "live_album")
+  "The list of valid entry types. The entry types should be in lower case."
+  :type 'list
+  :group 'metal-archives)
+
 (defconst metal-archives-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
   "Regexp to parse the date coming from metal-archives.com.")
 
@@ -87,6 +92,10 @@
 
 
 
+(defun metal-archives~is-valid-type (type)
+  "Check if the given TYPE (downcase) is part of the wanted types."
+  (member (downcase type) metal-archives-valid-types))
+
 (defun metal-archives~add-entry-to-db (vector-entry)
   "Parse an VECTOR-ENTRY coming from the metal-archives.com website.
 A metal-archives-entry is then created and added to `metal-archives-entry-database'."
@@ -98,10 +107,12 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
                                          metal-archives-output-date-format
                                          (aref vector-entry 4)))
          (entry (make-metal-archives-entry :artist artist :album album :type type :genre genre :date date)))
-    (when (member artist (ht-keys metal-archives-favorite-artists))
+    (when (and (member artist (ht-keys metal-archives-favorite-artists))
+               (metal-archives~is-valid-type type))
       (funcall metal-archives-favorite-handle entry))
 
-    (unless (member entry metal-archives-entry-database)
+    (when (and (not (member entry metal-archives-entry-database))
+               (metal-archives~is-valid-type type))
       (push entry metal-archives-entry-database))))
 
 
