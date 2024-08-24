@@ -7,7 +7,7 @@
 
 ;; Package-Requires: ((emacs "26.3") (org-ml "5.8.7") (alert "1.2") (ht "2.3") (metal-archives "0.3"))
 ;; Keywords: org, calendar
-;; Version: 0.2
+;; Version: 0.3
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives-shopping-list is free software; you can redistribute it and/or modify it
