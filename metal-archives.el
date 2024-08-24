@@ -183,21 +183,30 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
                            (metal-archives-entry-type entry))))
     (list idx tabulated-entry)))
 
+
+(defun metal-archives-list-update ()
+  "Update the list to be in sync with the database `metal-archives-entry-database'."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (setq tabulated-list-format [("Date" 15 t)
+                                 ("Artist" 25 nil)
+                                 ("Album"  40 nil)
+                                 ("Genre" 25 t)
+                                 ("Type"  0 nil)]);; last column takes what left
+    (setq tabulated-list-entries
+          (cl-mapcar 'metal-archives~format-entry
+                     metal-archives-entry-database
+                     (number-sequence 0 (length metal-archives-entry-database))))
+    (setq tabulated-list-padding 4
+          tabulated-list-sort-key (cons "Date" nil))
+    (tabulated-list-init-header)
+    (tabulated-list-print t)))
+
 (define-derived-mode metal-archives-list-mode tabulated-list-mode "metal-archives-list-mode"
   "Major mode of the metal archives release buffer."
-  (setq tabulated-list-format [("Date" 15 t)
-                               ("Artist" 25 nil)
-                               ("Album"  40 nil)
-                               ("Genre" 25 t)
-                               ("Type"  0 nil)]);; last column takes what left
-  (setq tabulated-list-entries
-        (cl-mapcar 'metal-archives~format-entry
-                   metal-archives-entry-database
-                   (number-sequence 0 (length metal-archives-entry-database))))
-  (setq tabulated-list-padding 4
-        tabulated-list-sort-key (cons "Date" nil))
-  (tabulated-list-init-header)
-  (tabulated-list-print t))
+  (metal-archives-list-update)
+  (define-key metal-archives-list-mode-map (kbd "g") 'metal-archives-list-update))
 
 (defun metal-archives-list-releases ()
   "List the releases in a tabulated buffer named *Metal Releases*."
