@@ -5,7 +5,7 @@
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "26.3") (org-ml "5.8.7") (alert "1.2") (ht "2.3") (metal-archives "0.1"))
+;; Package-Requires: ((emacs "26.3") (org-ml "5.8.7") (alert "1.2") (ht "2.3") (metal-archives "0.3"))
 ;; Keywords: org, calendar
 ;; Version: 0.2
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
@@ -150,6 +150,19 @@ if RETRIEVE is non nil, also ran `metal-archives-retrieve-next-releases'"
                     alert-growl-priorities))
          (cdr (assq metal-archives-shopping-list-release-threshold alert-growl-priorities)))
     (add-to-list 'metal-archives-shopping-list-release-to-flush entry)))
+
+
+
+(defun metal-archives-shopping-list-add-entry (entry)
+  "Add the given ENTRY to the current shopping list cache (metal-archives-shopping-list-update needs to be called after this!)."
+  (add-to-list 'metal-archives-shopping-list-release-to-flush entry))
+
+(defun metal-archives-add-to-shopping-list ()
+  "Execute the handler function on the current entry."
+  (interactive)
+  (let ((entry (metal-archives-get-current-entry)))
+    (when entry
+      (metal-archives-shopping-list-add-entry entry))))
 
 
 
