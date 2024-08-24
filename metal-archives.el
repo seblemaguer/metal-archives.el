@@ -6,7 +6,7 @@
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 ;; Package-Requires: ((emacs "26.3") (alert "1.2") (ht "2.3") (request "0.2.2"))
 ;; Keywords: lisp, calendar
-;; Version: 0.1
+;; Version: 0.2
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives is free software; you can redistribute it and/or modify it
@@ -166,7 +166,14 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
 
 
 
-(defun metal-archives~format-entry (entry)
+(defun metal-archives-get-current-entry ()
+  "Get the entry at the current point in the tabulated list."
+  (let* ((id (tabulated-list-get-id))
+         (entry (nth id metal-archives-entry-database)))
+    entry))
+
+
+(defun metal-archives~format-entry (entry idx)
   "Generate an entry for the metal archives release buffer."
   (let* ((tabulated-entry (vector
                            (metal-archives-entry-date entry)
@@ -174,8 +181,7 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
                            (metal-archives-entry-album entry)
                            (metal-archives-entry-genre entry)
                            (metal-archives-entry-type entry))))
-    (list "0" tabulated-entry)))
-
+    (list idx tabulated-entry)))
 
 (define-derived-mode metal-archives-list-mode tabulated-list-mode "metal-archives-list-mode"
   "Major mode of the metal archives release buffer."
@@ -183,9 +189,11 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
                                ("Artist" 25 nil)
                                ("Album"  40 nil)
                                ("Genre" 25 t)
-                               ("Type"  0 nil)]);; last columnt takes what left
+                               ("Type"  0 nil)]);; last column takes what left
   (setq tabulated-list-entries
-        (mapcar 'metal-archives~format-entry metal-archives-entry-database))
+        (cl-mapcar 'metal-archives~format-entry
+                   metal-archives-entry-database
+                   (number-sequence 0 (length metal-archives-entry-database))))
   (setq tabulated-list-padding 4
         tabulated-list-sort-key (cons "Date" nil))
   (tabulated-list-init-header)
