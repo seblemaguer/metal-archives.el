@@ -6,7 +6,7 @@
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 ;; Package-Requires: ((emacs "26.3") (alert "1.2") (ht "2.3") (request "0.2.2"))
 ;; Keywords: lisp, calendar
-;; Version: 0.2
+;; Version: 0.3
 ;; Homepage: https://github.com/seblemaguer/metal-archives.el
 
 ;; metal-archives is free software; you can redistribute it and/or modify it
