@@ -110,36 +110,42 @@
     (org-ml-map-children* (--map (metal-archives-shopping-list~update-release it) it) cur-node))
   cur-node)
 
+(defun metal-archives--find-subtree (tree target)
+  "Return the subtree whose :raw-value equals TARGET."
+  (org-element-map tree 'headline
+    (lambda (hl)
+      (when (string= (org-element-property :raw-value hl) target)
+        hl))
+    nil t))
+
 (defun metal-archives-shopping-list-update (&optional retrieve)
   "Update the shopping list.
 if RETRIEVE is non nil, also ran `metal-archives-retrieve-next-releases'"
   (interactive "P")
-
-  ;; Retrieve the new releases if required
   (when retrieve
     (metal-archives-retrieve-next-releases))
 
-  ;; Update the shopping list
-  (with-current-buffer (find-file metal-archives-shopping-list-target-file)
-    (let* ((todo-tree (org-element-parse-buffer)))
-      ;; We don't need the content, everything will be replaced!
-      (erase-buffer)
+  (with-current-buffer (find-file-noselect metal-archives-shopping-list-target-file)
+    (let* ((ast (org-element-parse-buffer))
+           (subtree (metal-archives--find-subtree ast metal-archives-shopping-list-root-node)))
 
-      ;; Remove the first useless nodes
-      (pop todo-tree)
-      (pop todo-tree)
+      (unless subtree
+        (error "Cannot find root node %s" metal-archives-shopping-list-root-node))
 
-      ;; Update the todo list
-      (dolist (elt todo-tree)
-        (when (eq (org-element-type elt) 'headline)
-          (setq elt (metal-archives-shopping-list~update-release elt)))
-        (insert (org-ml-to-string elt)))
+      ;; Compute new subtree
+      (let* ((updated (metal-archives-shopping-list~add-release subtree))
+             (new-text (org-ml-to-string updated))
+             (beg (org-element-property :begin subtree))
+             (end (org-element-property :end subtree)))
 
-      ;; Flush
+        ;; Replace only this region
+        (save-excursion
+          (goto-char beg)
+          (delete-region beg end)
+          (insert new-text)))
+
       (save-buffer)
-      (setq metal-archives-shopping-list-release-to-flush '())
-
-      ;; Switch back to the previous buffer
+      (setq metal-archives-shopping-list-release-to-flush nil)
       (switch-to-buffer (other-buffer (current-buffer) 1)))))
 
 (defun metal-archives-shopping-list-add-release-and-alert (entry)
