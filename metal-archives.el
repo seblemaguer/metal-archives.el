@@ -49,6 +49,11 @@
   :type 'list
   :group 'metal-archives)
 
+(defcustom metal-archives-music-root-dir "~/Music"
+  "Where the music is stored. It is assumed that the first level subdirectories are the artist names."
+  :type 'directory
+  :group 'metal-archives)
+
 (defconst metal-archives-input-date-regexp "\\([a-zA-Z]*\\) \\([0-9]\\{1,2\\}\\)[a-z]\\{2\\}, \\([0-9]\\{4\\}\\)"
   "Regexp to parse the date coming from metal-archives.com.")
 
@@ -90,6 +95,26 @@
     ;; Close the buffer
     (kill-this-buffer)))
 
+(defun metal-archives-scan-music-directory ()
+  "Scan the music directory `metal-archives-music-root-dir' and update the favorite artists hashtable."
+  (interactive)
+  (dolist (var (directory-files metal-archives-music-root-dir nil "^[^.]"))
+  (when (and (file-directory-p (format "%s/%s" metal-archives-music-root-dir var))
+             (not (ht-get metal-archives-favorite-artists var)))
+    (ht-set metal-archives-favorite-artists var 'high))))
+
+
+(defun metal-archives-save-artists-map ()
+  "Save the `'metal-archives-favorite-artists' to `metal-archives-artist-map-filename'.
+
+Be careful, the content of the file will be overwritten!.
+"
+  (interactive)
+  (with-current-buffer (find-file metal-archives-artist-map-filename)
+    (erase-buffer)
+    (ht-map (lambda (k v)
+              (insert (format "%s\t%s\n" k v)))
+            metal-archives-favorite-artists)))
 
 
 (defun metal-archives~is-valid-type (type)
