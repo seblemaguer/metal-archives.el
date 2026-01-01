@@ -40,9 +40,12 @@ It consists of two parts:
   2. an handle which triggers a specific action when a release from the favorite artist is spotted.
 
 The database is a hash table where the key of the element is the artist name and the value the priority stored in the `alert` format (the incremental priority list: `trivial`, `low`, `normal`, `moderate`, `high`, `urgent`).
-The variable `metal-archives-artist-map-filename` defines the database file.
+The variable `metal-archives-artists-map-filename` defines the database file.
 This file is assumed to be a Tab Separated Value (TSV) file containing two columns (artist, priority).
-The helper  `metal-archives-load-artists-map` is provided to load this database.
+The helper `metal-archives-load-artists-map` is provided to load this database.
+The helper `metal-archives-save-artists-map` can be used to also save the updated database into the database file
+A final helper is `metal-archives-scan-music-directory` is provided to extract the artist names from the music directory (identified by the customizable variable `metal-archives-music-root-dir`).
+It is assumed that the music directory first level subdirectories are the artist names.
 
 The handle is defined by `metal-archives-favorite-handle`.
 By default, it is set to `metal-archives-favorite-alert`.
