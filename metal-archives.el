@@ -72,7 +72,7 @@
 
 
 
-(defcustom metal-archives-artist-map-filename (format "%s/artist-map.cache" user-emacs-directory) ;
+(defcustom metal-archives-artists-map-filename (format "%s/artists-map.cache" user-emacs-directory) ;
   "The cache containing the hashtable which key are the favorite artists and the corresponding value is the priority."
   :type 'file
   :group 'metal-archives)
@@ -82,7 +82,7 @@
   (interactive)
   (setq metal-archives-favorite-artists (ht-create))
 
-  (with-current-buffer (find-file metal-archives-artist-map-filename)
+  (with-current-buffer (find-file metal-archives-artists-map-filename)
     (goto-char (point-min))
     (while (not (eobp))
       (let ((elts)
@@ -105,12 +105,12 @@
 
 
 (defun metal-archives-save-artists-map ()
-  "Save the `'metal-archives-favorite-artists' to `metal-archives-artist-map-filename'.
+  "Save the `'metal-archives-favorite-artists' to `metal-archives-artists-map-filename'.
 
 Be careful, the content of the file will be overwritten!.
 "
   (interactive)
-  (with-current-buffer (find-file metal-archives-artist-map-filename)
+  (with-current-buffer (find-file metal-archives-artists-map-filename)
     (erase-buffer)
     (ht-map (lambda (k v)
               (insert (format "%s\t%s\n" k v)))
