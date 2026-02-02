@@ -53,7 +53,7 @@
                             (metal-archives-entry-album entry)
                             (metal-archives-entry-type entry)
                             (metal-archives-entry-genre entry)
-                            (org-read-date nil nil (metal-archives-entry-date entry) nil))))
+                            (org-read-date nil nil (format-time-string "%Y-%m-%d" (metal-archives-entry-date entry))))))
     (insert org-entry)))
 
 (defun metal-archives-org-generate-org-from-db ()

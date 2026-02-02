@@ -77,10 +77,8 @@
                           :tags (list (metal-archives-entry-type release))
                           :todo-keyword metal-archives-shopping-list-release-todo-keyword
                           :section-children (list
-                                             (org-ml-build-planning! :scheduled
-                                                                     (reverse (seq-subseq (parse-time-string (metal-archives-entry-date release)) 3 6)))
-                                             (org-ml-build-property-drawer! (list "GENRE"
-                                                                                  (metal-archives-entry-genre release))
+                                             (org-ml-build-planning! :scheduled (reverse (seq-subseq (decode-time (metal-archives-entry-date release)) 3 6)))
+                                             (org-ml-build-property-drawer! (list "GENRE" (metal-archives-entry-genre release))
                                                                             `("CATEGORY" ,metal-archives-shopping-list-release-category)))))
 
 

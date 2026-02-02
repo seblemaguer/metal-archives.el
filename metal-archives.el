@@ -99,9 +99,9 @@
   "Scan the music directory `metal-archives-music-root-dir' and update the favorite artists hashtable."
   (interactive)
   (dolist (var (directory-files metal-archives-music-root-dir nil "^[^.]"))
-  (when (and (file-directory-p (format "%s/%s" metal-archives-music-root-dir var))
-             (not (ht-get metal-archives-favorite-artists var)))
-    (ht-set metal-archives-favorite-artists var 'high))))
+    (when (and (file-directory-p (format "%s/%s" metal-archives-music-root-dir var))
+               (not (ht-get metal-archives-favorite-artists var)))
+      (ht-set metal-archives-favorite-artists var 'high))))
 
 
 (defun metal-archives-save-artists-map ()
@@ -128,9 +128,9 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
          (album (decode-coding-string (replace-regexp-in-string "<a[^>]*>\\([^<]*\\)<.*" "\\1" (aref vector-entry 1)) 'utf-8))
          (type (decode-coding-string (replace-regexp-in-string "[ -]" "_" (aref vector-entry 2)) 'utf-8))
          (genre (decode-coding-string (aref vector-entry 3) 'utf-8))
-         (date (replace-regexp-in-string metal-archives-input-date-regexp
-                                         metal-archives-output-date-format
-                                         (aref vector-entry 4)))
+         (date (date-to-time (replace-regexp-in-string metal-archives-input-date-regexp
+                                                       metal-archives-output-date-format
+                                                       (aref vector-entry 4))))
          (entry (make-metal-archives-entry :artist artist :album album :type type :genre genre :date date)))
     (when (and (member artist (ht-keys metal-archives-favorite-artists))
                (metal-archives~is-valid-type type))
@@ -146,7 +146,7 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
   (alert (format "%s from %s will be released on %s"
                  (metal-archives-entry-album entry)
                  (metal-archives-entry-artist entry)
-                 (metal-archives-entry-date entry))
+                 (format-time-string "%Y-%m-%d" (metal-archives-entry-date entry)))
          :category 'release
          :severity (ht-get metal-archives-favorite-artists (metal-archives-entry-artist entry))))
 
@@ -201,7 +201,7 @@ A metal-archives-entry is then created and added to `metal-archives-entry-databa
 (defun metal-archives~format-entry (entry idx)
   "Generate an entry for the metal archives release buffer."
   (let* ((tabulated-entry (vector
-                           (metal-archives-entry-date entry)
+                           (format-time-string "%Y-%m-%d" (metal-archives-entry-date entry))
                            (metal-archives-entry-artist entry)
                            (metal-archives-entry-album entry)
                            (metal-archives-entry-genre entry)
